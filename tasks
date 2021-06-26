@@ -1,0 +1,18 @@
+ - Create docker image using the `Dockerfile` from the base image of `python:alpine`.
+ - Create docker-compose yaml stack file
+    - use mysql:5.7
+    - attach init.sql configuration file
+    -pull the image of the app from the AWS ECR repository.
+    -deploy the one app for each swarm nodes using `global` mode.
+    - run the app on `port 80`
+
+Infrastructure:
+
+- create cfn template to deploy the app into Docker containers
+- docker containers which are 3manager + 2worker
+- Amazon Linux EC2(t2.micro)
+-we need role for access ECR
+-we will use aws cli2 for pull/push from ECR
+- docker, awscli2, git, docker swarm,Amazon ECR credential helper
+-
+-
