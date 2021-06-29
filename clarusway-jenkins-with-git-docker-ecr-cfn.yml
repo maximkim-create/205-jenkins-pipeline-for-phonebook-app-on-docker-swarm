@@ -11,7 +11,6 @@ Description: |
   Jenkins Server will run on Amazon Linux 2 EC2 Instance with
   custom security group allowing HTTP(80, 8080) and SSH (22) connections from anywhere.
   Jenkins Server is configured with admin user `call-jenkins` and password `Call-jenkins1234`.
-
 Parameters:
   KeyPairName:
     Description: Enter the name of your Key Pair for SSH connections.
@@ -77,7 +76,7 @@ Resources:
   JenkinsServer:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0947d2ba12ee1ff75
+      ImageId: ami-03f1550d415dd1663
       InstanceType: t2.micro
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref EC2ConnectProfile
@@ -93,12 +92,6 @@ Resources:
           #! /bin/bash
           yum update -y
           hostnamectl set-hostname jenkins-server
-          yum install java-11-amazon-corretto -y
-          wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
-          rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
-          yum install jenkins -y
-          systemctl start jenkins
-          systemctl enable jenkins
           yum install python3 -y
           pip3 install ec2instanceconnectcli
           yum install amazon-ecr-credential-helper -y
