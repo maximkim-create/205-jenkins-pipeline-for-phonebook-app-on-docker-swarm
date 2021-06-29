@@ -13,8 +13,8 @@ services:
         networks:
             - clarusnet
         configs:
-            source: initialdatabase
-            target: /docker-entrypoint-initdb.d/init.sql
+            - source: initialdatabase
+              target: /docker-entrypoint-initdb.d/init.sql
     app-server: 
         image: 782349758377.dkr.ecr.us-east-1.amazonaws.com/clarusway-repo/phonebook-app:latest
         deploy:
