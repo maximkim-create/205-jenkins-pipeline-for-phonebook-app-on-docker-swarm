@@ -30,7 +30,8 @@ Resources:
               - ec2-instance-connect:SendSSHPublicKey
             Resource:
               - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
-            Condition: {"StringEquals": {"ec2:osuser": ["ec2-user", "ubuntu"]}}
+            Condition:
+              { "StringEquals": { "ec2:osuser": ["ec2-user", "ubuntu"] } }
           - Effect: Allow
             Action:
               - ec2:DescribeInstances
@@ -43,9 +44,9 @@ Resources:
           - Effect: Allow
             Principal:
               Service:
-              - ec2.amazonaws.com
+                - ec2.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - "sts:AssumeRole"
       ManagedPolicyArns:
         - !Ref InstanceConnectPolicy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
@@ -76,13 +77,13 @@ Resources:
   JenkinsServer:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0ab4d1e9cf9a1215a
+      ImageId: ami-0947d2ba12ee1ff75
       InstanceType: t2.micro
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref EC2ConnectProfile
       SecurityGroupIds:
         - !GetAtt JenkinsServerSecurityGroup.GroupId
-      Tags:                
+      Tags:
         - Key: Name
           Value: !Sub Jenkins Server of ${AWS::StackName}
         - Key: server
@@ -92,6 +93,12 @@ Resources:
           #! /bin/bash
           yum update -y
           hostnamectl set-hostname jenkins-server
+          yum install java-11-amazon-corretto -y
+          wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+          rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+          yum install jenkins -y
+          systemctl start jenkins
+          systemctl enable jenkins
           yum install python3 -y
           pip3 install ec2instanceconnectcli
           yum install amazon-ecr-credential-helper -y
@@ -101,11 +108,11 @@ Resources:
 Outputs:
   JenkinsDNS:
     Description: Jenkins Server DNS Name
-    Value: !Sub 
+    Value: !Sub
       - ${PublicAddress}
       - PublicAddress: !GetAtt JenkinsServer.PublicDnsName
   JenkinsURL:
     Description: Jenkins Application URL
-    Value: !Sub 
+    Value: !Sub
       - http://${PublicAddress}:8080
       - PublicAddress: !GetAtt JenkinsServer.PublicDnsName
