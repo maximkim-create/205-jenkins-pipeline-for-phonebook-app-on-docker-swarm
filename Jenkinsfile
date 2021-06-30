@@ -9,7 +9,7 @@ pipeline {
         ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         APP_REPO_NAME = "clarusway-repo/phonebook-app"
         APP_NAME = "phonebook"
-        AWS_STACK_NAME = "Serdar-Phonebook-App-${BUILD_NUMBER}"
+        AWS_STACK_NAME = "Davids-Phonebook-App-${BUILD_NUMBER}"
         CFN_TEMPLATE="phonebook-docker-swarm-cfn-template.yml"
         CFN_KEYPAIR="davidskey"
         HOME_FOLDER = "/home/ec2-user"
@@ -113,9 +113,10 @@ pipeline {
                 """
             echo 'Deleting Cloudformation Stack due to the Failure'
             sh 'aws cloudformation delete-stack --region ${AWS_REGION} --stack-name ${AWS_STACK_NAME}'
+            echo 'Do not give up! Try again!'
         }
         success {
-            echo 'You are the man/woman...'
+            echo 'Good job!'
         }
     }
 }
